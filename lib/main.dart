@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:tictactoe_ispas/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,11 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
+      routes: appRoutes,
       title: 'Tic Tac Toe',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const StartScreen(),
     );
   }
 }
@@ -85,7 +87,7 @@ class _MyHomePageState extends State<StartScreen> {
             'Start',
             style: TextStyle(fontSize: 24),
           ),
-          onPressed: () => {},
+          onPressed: () => Navigator.pushNamed(context, '/game'),
         ),
       );
 }
