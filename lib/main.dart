@@ -46,9 +46,8 @@ class _MyHomePageState extends State<StartScreen> {
           ),
           gradient: const LinearGradient(
             colors: [
-              Colors.blue,
-              Colors.purple,
-              Colors.red,
+              Color(0xFF6782b4),
+              Color(0xffb1bfd8),
             ],
           ),
         ),
@@ -68,7 +67,7 @@ class _MyHomePageState extends State<StartScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.5, 1],
-            colors: [Colors.blue, Colors.purple],
+            colors: [Color(0xff606c88), Color(0xFF3f4c6b)],
           ),
         ),
       );
@@ -77,7 +76,7 @@ class _MyHomePageState extends State<StartScreen> {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-            primary: Colors.red,
+            primary: Color(0xFFD4BEAB),
             textStyle: const TextStyle(fontSize: 20),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
@@ -85,7 +84,10 @@ class _MyHomePageState extends State<StartScreen> {
           ),
           child: const Text(
             'Start',
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(
+              fontSize: 24,
+              color: Color(0xff606C88),
+            ),
           ),
           onPressed: () => Navigator.pushNamed(context, '/game'),
         ),
