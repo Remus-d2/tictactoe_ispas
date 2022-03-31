@@ -28,6 +28,8 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) => _scaffold(children: [
         _pointsTable(),
+        _buildGrid(),
+        _buildTurn(),
       ]);
 
   // === BUILDING THE MAIN LAYOUT ===
@@ -112,4 +114,51 @@ class _GameScreenState extends State<GameScreen> {
           ],
         ),
       );
+
+  // === BUILD GRID ===
+
+  Widget _buildGrid() => Expanded(
+        flex: 3,
+        child: GridView.builder(
+            itemCount: 9,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              return GestureDetector(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade700),
+                  ),
+                  child: Center(
+                    child: Text(
+                      _xOrOList[index],
+                      style: TextStyle(
+                        color:
+                            _xOrOList[index] == 'x' ? Colors.white : Colors.red,
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+      );
+
+  // === BUILD TURN ===
+
+  Widget _buildTurn() {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Text(
+            _turnOfX ? 'Turn of X' : 'Turn of O',
+            style: CustomText(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
 }
