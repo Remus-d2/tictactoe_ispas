@@ -26,9 +26,9 @@ class _GameScreenState extends State<GameScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
+  Widget build(BuildContext context) => _scaffold(children: [
+        _pointsTable(),
+      ]);
 
   // === BUILDING THE MAIN LAYOUT ===
 
@@ -50,6 +50,66 @@ class _GameScreenState extends State<GameScreen> {
               fontWeight: FontWeight.w800,
             ),
           ),
+        ),
+        backgroundColor: Colors.grey[900],
+        body: Column(
+          children: children,
+        ),
+      );
+
+  // === POINTS TABLE ===
+
+  Widget _pointsTable() => Expanded(
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _playerXScore(),
+              _playerOScore(),
+            ],
+          ),
+        ),
+      );
+
+  Widget _playerName(String name) => Text(
+        'Player $name',
+        style: CustomText(
+            fontSize: 22.0, color: Colors.white, fontWeight: FontWeight.w800),
+      );
+
+  Widget _playerScore(int score) => Text(
+        score.toString(),
+        style: CustomText(
+            color: Colors.white, fontSize: 25.0, fontWeight: FontWeight.bold),
+      );
+
+  Widget _spacer() => const SizedBox(
+        height: 20,
+      );
+
+  Widget _playerXScore() => Padding(
+        padding: const EdgeInsets.all(
+          20.0,
+        ),
+        child: Column(
+          children: [
+            _playerName('X'),
+            _spacer(),
+            _playerScore(_scoreX),
+          ],
+        ),
+      );
+
+  Widget _playerOScore() => Padding(
+        padding: const EdgeInsets.all(
+          20.0,
+        ),
+        child: Column(
+          children: [
+            _playerName('O'),
+            _spacer(),
+            _playerScore(_scoreO),
+          ],
         ),
       );
 }
