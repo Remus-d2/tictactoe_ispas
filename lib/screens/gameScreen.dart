@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:tictactoe_ispas/shared/alert-dialog.dart';
 import 'package:tictactoe_ispas/shared/customStyled.dart';
 
 class GameScreen extends StatefulWidget {
@@ -26,11 +28,13 @@ class _GameScreenState extends State<GameScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) => _scaffold(children: [
-        _pointsTable(),
-        _buildGrid(),
-        _buildTurn(),
-      ]);
+  Widget build(BuildContext context) => _scaffold(
+        children: [
+          _pointsTable(),
+          _buildGrid(),
+          _buildTurn(),
+        ],
+      );
 
   // === BUILDING THE MAIN LAYOUT ===
 
@@ -41,7 +45,9 @@ class _GameScreenState extends State<GameScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.refresh),
-              onPressed: () {},
+              onPressed: () {
+                _clearBoard();
+              },
             ),
           ],
           title: Text(
@@ -119,32 +125,35 @@ class _GameScreenState extends State<GameScreen> {
 
   Widget _buildGrid() => Expanded(
         flex: 3,
-        child: GridView.builder(
-            itemCount: 9,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade700),
-                  ),
-                  child: Center(
-                    child: Text(
-                      _xOrOList[index],
-                      style: TextStyle(
-                        color:
-                            _xOrOList[index] == 'x' ? Colors.white : Colors.red,
-                        fontSize: 40,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }),
+        child: _gridView(),
       );
+
+  Widget _gridView() => GridView.builder(
+      itemCount: 9,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () {
+            _tapped(index);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade700),
+            ),
+            child: Center(
+              child: Text(
+                _xOrOList[index],
+                style: TextStyle(
+                  color: _xOrOList[index] == 'x' ? Colors.white : Colors.red,
+                  fontSize: 40,
+                ),
+              ),
+            ),
+          ),
+        );
+      });
 
   // === BUILD TURN ===
 
@@ -160,5 +169,128 @@ class _GameScreenState extends State<GameScreen> {
         ),
       ),
     );
+  }
+
+  // === TAPPED ===
+
+  void _tapped(int index) {
+    setState(() {
+      if (_turnOfX && _xOrOList[index] == '') {
+        _xOrOList[index] = 'x';
+        _filledBoxes += 1;
+      } else if (!_turnOfX && _xOrOList[index] == '') {
+        _xOrOList[index] = 'o';
+        _filledBoxes += 1;
+      }
+
+      _turnOfX = !_turnOfX;
+      _checkTheWinner();
+    });
+  }
+
+  // === CHECK WINNER ===
+
+  void _checkTheWinner() {
+    // check first row
+    if (_xOrOList[0] == _xOrOList[1] &&
+        _xOrOList[0] == _xOrOList[2] &&
+        _xOrOList[0] != '') {
+      _showAlertDialog('Winner', _xOrOList[0]);
+      return;
+    }
+
+    // check second row
+    if (_xOrOList[3] == _xOrOList[4] &&
+        _xOrOList[3] == _xOrOList[5] &&
+        _xOrOList[3] != '') {
+      _showAlertDialog('Winner', _xOrOList[3]);
+      return;
+    }
+
+    // check third row
+    if (_xOrOList[6] == _xOrOList[7] &&
+        _xOrOList[6] == _xOrOList[8] &&
+        _xOrOList[6] != '') {
+      _showAlertDialog('Winner', _xOrOList[6]);
+      return;
+    }
+
+    // check first column
+    if (_xOrOList[0] == _xOrOList[3] &&
+        _xOrOList[0] == _xOrOList[6] &&
+        _xOrOList[0] != '') {
+      _showAlertDialog('Winner', _xOrOList[0]);
+      return;
+    }
+
+    // check second column
+    if (_xOrOList[1] == _xOrOList[4] &&
+        _xOrOList[1] == _xOrOList[7] &&
+        _xOrOList[1] != '') {
+      _showAlertDialog('Winner', _xOrOList[1]);
+      return;
+    }
+
+    // check third column
+    if (_xOrOList[2] == _xOrOList[5] &&
+        _xOrOList[2] == _xOrOList[8] &&
+        _xOrOList[2] != '') {
+      _showAlertDialog('Winner', _xOrOList[2]);
+      return;
+    }
+
+    // check diagonal
+    if (_xOrOList[0] == _xOrOList[4] &&
+        _xOrOList[0] == _xOrOList[8] &&
+        _xOrOList[0] != '') {
+      _showAlertDialog('Winner', _xOrOList[0]);
+      return;
+    }
+
+    // check diagonal
+    if (_xOrOList[2] == _xOrOList[4] &&
+        _xOrOList[2] == _xOrOList[6] &&
+        _xOrOList[2] != '') {
+      _showAlertDialog('Winner', _xOrOList[2]);
+      return;
+    }
+
+    if (_filledBoxes == 9) {
+      _showAlertDialog('Draw', '');
+    }
+  }
+
+  // === SHOW ALERT DIALOG ===
+
+  void _showAlertDialog(String title, String winner) {
+    showAlertDialog(
+        context: context,
+        title: title,
+        content: winner == ''
+            ? 'The match ended in a draw'
+            : 'The winner is ${winner.toUpperCase()}',
+        defaultActionText: 'OK',
+        onOkPressed: () {
+          _clearBoard();
+          Navigator.of(context).pop();
+        });
+
+    if (winner == 'o') {
+      _scoreO += 1;
+    } else if (winner == 'x') {
+      _scoreX += 1;
+    }
+  }
+
+  // === CLEAR BOARD ===
+
+  void _clearBoard() {
+    setState(() {
+      for (int i = 0; i < 9; i++) {
+        _xOrOList[i] = '';
+      }
+    });
+
+    _filledBoxes = 0;
   }
 }
